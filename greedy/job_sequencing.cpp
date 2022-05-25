@@ -61,7 +61,6 @@ class Solution
             }
         }
 
-        
         vector<int> temp(2);
         temp[0] = c;
         temp[1] = mp;
