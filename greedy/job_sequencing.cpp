@@ -1,3 +1,6 @@
+// { Driver Code Starts
+// Program to find the maximum profit job sequence from a given array 
+// of jobs with deadlines and profits 
 #include<bits/stdc++.h>
 using namespace std; 
 
@@ -11,62 +14,52 @@ struct Job
 
 
  // } Driver Code Ends
+/*
+struct Job 
+{ 
+    int id;	 // Job Id 
+    int dead; // Deadline of job 
+    int profit; // Profit if job is over before or on deadline 
+};
+*/
+
 class Solution 
 {
     public:
+    static bool comparator(struct Job m1, struct Job m2) {
+        return  m1.profit>m2.profit;
+    }
     //Function to find the maximum profit and the number of jobs done.
     vector<int> JobScheduling(Job arr[], int n) 
     { 
         // your code here
-        vector<pair<int, int>> v;
-        int i;
-        int mdead=0;
-        for(i = 0; i<n; i++) {
-            pair<int, int> p;
-            p.first = arr[i].profit;
-            p.second = arr[i].dead;
-            if(p.second>mdead) {
-                mdead = p.second;
-            }
-            v.push_back(p);
+        sort(arr, arr+n, comparator);
+        int md = arr[0].dead;
+        int profit = 0;
+        int i = 1;
+        for(i=1;i<n;i++) {
+            md = max(arr[i].dead, md);
         }
         
-        vector<int> a(mdead+1,-1);
-        
-        sort(v.begin(), v.end());
-        
-        // for(int x=n-1;x>-1;x--) {
-        //     cout<<v[x].first<<" "<<v[x].second<<endl;
-        // }
-        
-        
-
-        
-        for(i=n-1;i>-1;i--) {
-            int j = v[i].second;
-            while(j>0){
-                if(a[j]==-1) {
-                    a[j] = v[i].first;
+        vector<int> slot(md+1, -1);
+        int t = 0;
+        i = 0;
+        while(i<n) {
+            for(int j = arr[i].dead; j>0; j--){
+                if (slot[j]==-1) {
+                    slot[j] = arr[i].id;
+                    profit += arr[i].profit;
+                    t++;
                     break;
                 }
-                j--;
             }
+            i++;
         }
-        
-        int mp = 0, c= 0;
-        for(auto x: a) {
-            if(x!=-1) {
-                mp+=x;
-                c++;
-            }
-        }
-
-        vector<int> temp(2);
-        temp[0] = c;
-        temp[1] = mp;
-        
-        return temp;
-    } 
+        vector<int> ans(2);
+        ans[0] = t;
+        ans[1] = profit;
+        return ans;
+    }
 };
 
 // { Driver Code Starts.
